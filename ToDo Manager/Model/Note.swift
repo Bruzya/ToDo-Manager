@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Note {
+struct Note: Codable {
     var name: String
     var id: UUID = UUID()
     var isCompleted: Bool = false
