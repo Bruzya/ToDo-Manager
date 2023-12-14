@@ -96,15 +96,13 @@ extension ListController: UITableViewDelegate {
         }
     }
     
-    //FIXME: - bug, become gray after rename using reloadRows with animations, but not with reload data on table view. fix by extension add animation on reloadData
     //Rename
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: "Rename") { _, _, completion in
             self.noteManager.showAlert(in: self) { [weak self] text in
                 self?.noteManager.removeNote(at: indexPath.row)
                 self?.noteManager.notes.insert(contentsOf: [Note(name: text)], at: indexPath.row)
-//                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-//                self?.tableView.reloadData()
+                self?.noteManager.setBadge()
                 self?.tableView.reloadData(with: .automatic)
                 completion(true)
             }

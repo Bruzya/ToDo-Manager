@@ -87,7 +87,6 @@ extension NoteManager {
         alert.addTextField { textField in
             textField.placeholder = "New Note"
         }
-        
         viewController.present(alert, animated: true)
     }
 }
