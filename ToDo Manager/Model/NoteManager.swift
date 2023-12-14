@@ -70,7 +70,24 @@ extension NoteManager {
                 totalBadgeNumber += 1
             }
         }
-        
         UIApplication.shared.applicationIconBadgeNumber = totalBadgeNumber
+    }
+    
+    func showAlert(in viewController: UIViewController, completion: @escaping ((String) -> Void)) {
+        let alert = UIAlertController(title: Constants.Alert.title, message: nil, preferredStyle: .alert)
+        let saveButton = UIAlertAction(title: Constants.Alert.save, style: .default) { _ in
+            if let text = alert.textFields?.first?.text, text != "" {
+                completion(text)
+            }
+        }
+        let cancelButton = UIAlertAction(title: Constants.Alert.cancel, style: .destructive)
+        
+        alert.addAction(saveButton)
+        alert.addAction(cancelButton)
+        alert.addTextField { textField in
+            textField.placeholder = "New Note"
+        }
+        
+        viewController.present(alert, animated: true)
     }
 }

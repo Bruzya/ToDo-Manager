@@ -1,5 +1,5 @@
 //
-//  MainViewController.swift
+//  ListController.swift
 //  ToDo Manager
 //
 //  Created by Evgenii Mazrukho on 13.12.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class ListController: UIViewController {
     
     //MARK: - Properties
     private let noteManager = NoteManager()
@@ -30,7 +30,7 @@ class MainViewController: UIViewController {
 }
 
 //MARK: - Methods
-private extension MainViewController {
+private extension ListController {
     func setupView() {
         view.backgroundColor = .white
         title = Constants.NavBar.mainTitle
@@ -46,7 +46,7 @@ private extension MainViewController {
     }
     
     func configureNavBar() {
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(openAlert))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed))
         let editButton = UIBarButtonItem(title: Constants.NavBar.editTitle, style: .plain, target: self, action: #selector(editTableView))
         navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
     }
@@ -69,25 +69,11 @@ private extension MainViewController {
         }
     }
     
-    @objc func openAlert() {
-        let alert = UIAlertController(title: Constants.Alert.title, message: nil, preferredStyle: .alert)
-        let saveButton = UIAlertAction(title: Constants.Alert.save, style: .default) { _ in
-            if let textName = alert.textFields?.first?.text {
-                if textName != "" {
-                    self.noteManager.addNote(name: textName)
-                    self.tableView.reloadData()
-                }
-            }
+    @objc func addButtonPressed() {
+        noteManager.showAlert(in: self) { [weak self] text in
+            self?.noteManager.addNote(name: text)
+            self?.tableView.reloadData()
         }
-        let cancelButton = UIAlertAction(title: Constants.Alert.cancel, style: .destructive)
-        
-        alert.addAction(saveButton)
-        alert.addAction(cancelButton)
-        alert.addTextField { textField in
-            textField.placeholder = "New Note"
-        }
-        
-        present(alert, animated:  true)
     }
     
     func setConstraints() {
@@ -101,13 +87,27 @@ private extension MainViewController {
 }
 
 //MARK: - UITableViewDelegate & DataSource
-extension MainViewController: UITableViewDelegate {
+extension ListController: UITableViewDelegate {
     //Delete
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             noteManager.removeNote(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
+    }
+    
+    //FIXME: - bug, become gray after rename
+    //Rename
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let action = UIContextualAction(style: .normal, title: "Rename") { _, _, completion in
+            self.noteManager.showAlert(in: self) { [weak self] text in
+                self?.noteManager.removeNote(at: indexPath.row)
+                self?.noteManager.notes.insert(contentsOf: [Note(name: text)], at: indexPath.row)
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                completion(true)
+            }
+        }
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
     //Select
@@ -128,7 +128,7 @@ extension MainViewController: UITableViewDelegate {
     }
 }
 
-extension MainViewController: UITableViewDataSource {
+extension ListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         noteManager.notes.count
     }
