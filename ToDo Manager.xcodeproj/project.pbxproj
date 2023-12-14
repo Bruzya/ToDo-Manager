@@ -14,6 +14,7 @@
 		52E525BE2B29A2F300E5DF1A /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E525BD2B29A2F300E5DF1A /* Note.swift */; };
 		52E525C52B2AAA8B00E5DF1A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E525C42B2AAA8B00E5DF1A /* Constants.swift */; };
 		52E525C72B2AB0D000E5DF1A /* NoteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E525C62B2AB0D000E5DF1A /* NoteManager.swift */; };
+		52E525CA2B2B580700E5DF1A /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E525C92B2B580600E5DF1A /* TableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		52E525BD2B29A2F300E5DF1A /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		52E525C42B2AAA8B00E5DF1A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		52E525C62B2AB0D000E5DF1A /* NoteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteManager.swift; sourceTree = "<group>"; };
+		52E525C92B2B580600E5DF1A /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 		52E525BA2B299BD300E5DF1A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				52E525C82B2B57FC00E5DF1A /* Extensions */,
 				52E525C42B2AAA8B00E5DF1A /* Constants.swift */,
 				52E525AC2B299B3500E5DF1A /* Assets.xcassets */,
 			);
@@ -116,6 +119,14 @@
 				52E525A72B299B3400E5DF1A /* ListController.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		52E525C82B2B57FC00E5DF1A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				52E525C92B2B580600E5DF1A /* TableView.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,6 +201,7 @@
 				52E525C52B2AAA8B00E5DF1A /* Constants.swift in Sources */,
 				52E525A82B299B3400E5DF1A /* ListController.swift in Sources */,
 				52E525A42B299B3400E5DF1A /* AppDelegate.swift in Sources */,
+				52E525CA2B2B580700E5DF1A /* TableView.swift in Sources */,
 				52E525C72B2AB0D000E5DF1A /* NoteManager.swift in Sources */,
 				52E525A62B299B3400E5DF1A /* SceneDelegate.swift in Sources */,
 				52E525BE2B29A2F300E5DF1A /* Note.swift in Sources */,
