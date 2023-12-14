@@ -18,6 +18,8 @@ struct Constants {
     
     enum NavBar {
         static let mainTitle = "Notes"
+        static let doneTitle = "Done"
+        static let editTitle = "Edit"
     }
     
     enum Alert {

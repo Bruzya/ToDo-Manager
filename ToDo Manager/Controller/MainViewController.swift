@@ -47,17 +47,25 @@ private extension MainViewController {
     
     func configureNavBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(openAlert))
-        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editTableView))
+        let editButton = UIBarButtonItem(title: Constants.NavBar.editTitle, style: .plain, target: self, action: #selector(editTableView))
         navigationItem.setRightBarButtonItems([addButton, editButton], animated: true)
     }
     
     @objc func editTableView() {
         tableView.setEditing(!tableView.isEditing, animated: true)
-        switch tableView.isEditing {
-        case true:
-            navigationItem.rightBarButtonItems![1].title = "Done"
-        case false:
-            navigationItem.rightBarButtonItems![1].title = "Edit"
+        let navigationItem = self.navigationItem.rightBarButtonItems!
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            switch self.tableView.isEditing {
+            case true:
+                navigationItem[1].title = Constants.NavBar.doneTitle
+                navigationItem[0].isEnabled = false
+            case false:
+                navigationItem[1].title = Constants.NavBar.editTitle
+                navigationItem[0].isEnabled = true
+            }
+            
+            self.tableView.reloadData()
         }
     }
     
@@ -65,8 +73,10 @@ private extension MainViewController {
         let alert = UIAlertController(title: Constants.Alert.title, message: nil, preferredStyle: .alert)
         let saveButton = UIAlertAction(title: Constants.Alert.save, style: .default) { _ in
             if let textName = alert.textFields?.first?.text {
-                self.noteManager.addNote(name: textName)
-                self.tableView.reloadData()
+                if textName != "" {
+                    self.noteManager.addNote(name: textName)
+                    self.tableView.reloadData()
+                }
             }
         }
         let cancelButton = UIAlertAction(title: Constants.Alert.cancel, style: .destructive)
@@ -100,21 +110,19 @@ extension MainViewController: UITableViewDelegate {
         }
     }
     
-    //FIXME: - autodeleting checkmarks when new row has been added
     //Select
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if noteManager.changeState(at: indexPath.row) {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            tableView.cellForRow(at: indexPath)?.imageView?.image = .check
         } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+            tableView.cellForRow(at: indexPath)?.imageView?.image = .blank
         }
     }
     
     //change cells between each other
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
         noteManager.moveNote(from: sourceIndexPath.row, to: destinationIndexPath.row)
         tableView.reloadData()
     }
@@ -131,6 +139,21 @@ extension MainViewController: UITableViewDataSource {
         let currentNote = noteManager.notes[indexPath.row]
         
         cell.textLabel?.text = currentNote.name
+        if noteManager.notes[indexPath.row].isCompleted {
+            cell.imageView?.image = .check
+        } else {
+            cell.imageView?.image = .blank
+        }
+        
+        switch tableView.isEditing {
+        case true:
+            cell.textLabel?.alpha = 0.4
+            cell.imageView?.alpha = 0.4
+        case false:
+            cell.textLabel?.alpha = 1
+            cell.textLabel?.alpha = 1
+        }
+        
         return cell
     }
 }
