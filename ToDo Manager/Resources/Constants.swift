@@ -14,6 +14,7 @@ struct Constants {
     
     enum TableView {
         static let cellID = "Cell"
+        static let leadingSwipe = "Rename"
     }
     
     enum NavBar {

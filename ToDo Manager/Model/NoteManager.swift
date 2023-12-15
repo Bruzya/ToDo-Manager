@@ -41,10 +41,13 @@ extension NoteManager {
         setBadge()
     }
     
-    func changeState(at index: Int) -> Bool {
-        notes[index].isCompleted = !notes[index].isCompleted
+    func renameNote(at index: Int, newTitle: String) {
+        notes[index].name = newTitle
+    }
+    
+    func changeState(at index: Int) {
+        notes[index].isCompleted.toggle()
         setBadge()
-        return notes[index].isCompleted
     }
     
     func moveNote(from sourceIndex: Int, to destinationIndex: Int) {

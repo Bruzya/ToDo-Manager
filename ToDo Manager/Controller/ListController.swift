@@ -11,6 +11,7 @@ class ListController: UIViewController {
     
     //MARK: - Properties
     private let noteManager = NoteManager()
+    
     //MARK: - UI
     var tableView: UITableView = {
         let tableView = UITableView()
@@ -98,11 +99,9 @@ extension ListController: UITableViewDelegate {
     
     //Rename
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let action = UIContextualAction(style: .normal, title: "Rename") { _, _, completion in
+        let action = UIContextualAction(style: .normal, title: Constants.TableView.leadingSwipe) { _, _, completion in
             self.noteManager.showAlert(in: self) { [weak self] text in
-                self?.noteManager.removeNote(at: indexPath.row)
-                self?.noteManager.notes.insert(contentsOf: [Note(name: text)], at: indexPath.row)
-                self?.noteManager.setBadge()
+                self?.noteManager.renameNote(at: indexPath.row, newTitle: text)
                 self?.tableView.reloadData(with: .automatic)
                 completion(true)
             }
@@ -112,13 +111,8 @@ extension ListController: UITableViewDelegate {
     
     //Select
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        if noteManager.changeState(at: indexPath.row) {
-            tableView.cellForRow(at: indexPath)?.imageView?.image = .check
-        } else {
-            tableView.cellForRow(at: indexPath)?.imageView?.image = .blank
-        }
+        noteManager.changeState(at: indexPath.row)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
     
     //change cells between each other
@@ -139,20 +133,10 @@ extension ListController: UITableViewDataSource {
         let currentNote = noteManager.notes[indexPath.row]
         
         cell.textLabel?.text = currentNote.name
-        if noteManager.notes[indexPath.row].isCompleted {
-            cell.imageView?.image = .check
-        } else {
-            cell.imageView?.image = .blank
-        }
+        cell.imageView?.image = noteManager.notes[indexPath.row].isCompleted ? .check : .uncheck
         
-        switch tableView.isEditing {
-        case true:
-            cell.textLabel?.alpha = 0.4
-            cell.imageView?.alpha = 0.4
-        case false:
-            cell.textLabel?.alpha = 1
-            cell.textLabel?.alpha = 1
-        }
+        cell.textLabel?.alpha = tableView.isEditing ? 0.4 : 1
+        cell.imageView?.alpha = tableView.isEditing ? 0.4 : 1
         
         return cell
     }
