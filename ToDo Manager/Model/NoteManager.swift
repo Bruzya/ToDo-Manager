@@ -76,13 +76,19 @@ extension NoteManager {
         UIApplication.shared.applicationIconBadgeNumber = totalBadgeNumber
     }
     
-    func showAlert(in viewController: UIViewController, completion: @escaping ((String) -> Void)) {
-        let alert = UIAlertController(title: Constants.Alert.title, message: nil, preferredStyle: .alert)
-        let saveButton = UIAlertAction(title: Constants.Alert.save, style: .default) { _ in
+    func showAlert(
+        in viewController: UIViewController,
+        alertTitle: String,
+        saveTitle: String,
+        completion: @escaping ((String) -> Void)
+    ) {
+        let alert = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+        let saveButton = UIAlertAction(title: saveTitle, style: .default) { _ in
             if let text = alert.textFields?.first?.text, text != "" {
                 completion(text)
             }
         }
+
         let cancelButton = UIAlertAction(title: Constants.Alert.cancel, style: .destructive)
         
         alert.addAction(saveButton)

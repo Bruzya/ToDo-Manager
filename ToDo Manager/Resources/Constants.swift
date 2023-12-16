@@ -24,7 +24,9 @@ struct Constants {
     }
     
     enum Alert {
-        static let title = "Create note"
+        static let addTitle = "Create note"
+        static let renameTitle = "Rename note"
+        static let update = "Update"
         static let save = "Save"
         static let cancel = "Cancel"
     }

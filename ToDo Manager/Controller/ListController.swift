@@ -71,7 +71,11 @@ private extension ListController {
     }
     
     @objc func addButtonPressed() {
-        noteManager.showAlert(in: self) { [weak self] text in
+        noteManager.showAlert(
+            in: self,
+            alertTitle: Constants.Alert.addTitle,
+            saveTitle: Constants.Alert.save
+        ) { [weak self] text in
             self?.noteManager.addNote(name: text)
             self?.tableView.reloadData()
         }
@@ -100,7 +104,11 @@ extension ListController: UITableViewDelegate {
     //Rename
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action = UIContextualAction(style: .normal, title: Constants.TableView.leadingSwipe) { _, _, completion in
-            self.noteManager.showAlert(in: self) { [weak self] text in
+            self.noteManager.showAlert(
+                in: self,
+                alertTitle: Constants.Alert.renameTitle,
+                saveTitle: Constants.Alert.update
+            ) { [weak self] text in
                 self?.noteManager.renameNote(at: indexPath.row, newTitle: text)
                 self?.tableView.reloadData(with: .automatic)
                 completion(true)
@@ -133,6 +141,8 @@ extension ListController: UITableViewDataSource {
         let currentNote = noteManager.notes[indexPath.row]
         
         cell.textLabel?.text = currentNote.name
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.textAlignment = .left
         cell.imageView?.image = noteManager.notes[indexPath.row].isCompleted ? .check : .uncheck
         
         cell.textLabel?.alpha = tableView.isEditing ? 0.4 : 1
